@@ -92,10 +92,11 @@
   }
 
   // ---------- tiny, safe Markdown → DOM ----------
-  var INLINE = /(\\[\\`*_\[\]()#>!-])|(`[^`\n]+`)|(\*\*[^*\n]+\*\*)|(<https?:\/\/[^>\s]+>)|(\[[^\]\n]+\]\(https?:\/\/[^)\s]+\))|(https?:\/\/[^\s<>()]+[^\s<>().,;:!?'"])/g;
+  var INLINE_SRC = /(\\[\\`*_\[\]()#>!-])|(`[^`\n]+`)|(\*\*[^*\n]+\*\*)|(<https?:\/\/[^>\s]+>)|(\[[^\]\n]+\]\(https?:\/\/[^)\s]+\))|(https?:\/\/[^\s<>()]+[^\s<>().,;:!?'"])/g;
   function inline(parent, text) {
+    // Fresh regex per call: inline() recurses for **bold**, and a shared /g lastIndex would loop forever.
+    var INLINE = new RegExp(INLINE_SRC.source, 'g');
     var last = 0, m;
-    INLINE.lastIndex = 0;
     while ((m = INLINE.exec(text))) {
       if (m.index > last) parent.appendChild(document.createTextNode(text.slice(last, m.index)));
       var t = m[0];
