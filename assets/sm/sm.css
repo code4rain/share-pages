@@ -1,0 +1,36 @@
+#sm-root { max-width: 46rem; }
+.sm-hidden { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
+.sm-lockform { display: flex; flex-direction: column; gap: .6rem; max-width: 26rem; margin: 2rem 0; }
+.sm-lockform input[type=password], .sm-search {
+  font: inherit; padding: .6rem .75rem; border: 1px solid #d0d7de; border-radius: 6px; width: 100%; box-sizing: border-box;
+}
+.sm-lockform input[type=password]:focus, .sm-search:focus { outline: 2px solid #7253ed; outline-offset: 1px; }
+.sm-label { font-weight: 600; }
+.sm-check { display: flex; align-items: center; gap: .4rem; font-size: .9rem; }
+.sm-muted { color: #5c5962; font-size: .9rem; margin: 0; }
+.sm-status { min-height: 1.2em; margin: 0; }
+.sm-error { color: #dd2e2e; }
+.sm-toolbar { display: flex; gap: .5rem; justify-content: flex-end; margin-bottom: .5rem; }
+.sm-filters { display: flex; flex-wrap: wrap; gap: .75rem; align-items: center; margin: .5rem 0; }
+.sm-filters .sm-search { flex: 1 1 16rem; }
+.sm-count { margin: .25rem 0 1rem; }
+.sm-day { font-size: .95rem !important; color: #5c5962; margin: 1.5rem 0 .5rem !important; }
+.sm-list { display: flex; flex-direction: column; gap: .6rem; }
+.sm-card {
+  display: flex; flex-direction: column; gap: .25rem; padding: .85rem 1rem; border: 1px solid #eeebee;
+  border-radius: 10px; text-decoration: none !important; color: inherit !important; background: #fff;
+  box-shadow: 0 1px 2px rgba(0,0,0,.04); transition: border-color .15s, box-shadow .15s;
+}
+.sm-card:hover, .sm-card:focus { border-color: #7253ed; box-shadow: 0 2px 8px rgba(114,83,237,.15); }
+.sm-card-title { font-weight: 600; line-height: 1.35; color: #27262b; }
+.sm-card-meta { font-size: .8rem; color: #7253ed; }
+.sm-card-snippet { font-size: .9rem; color: #5c5962; line-height: 1.45; overflow-wrap: anywhere; }
+.sm-card-cats { display: flex; flex-wrap: wrap; gap: .25rem; }
+.sm-card-cats .label { margin: 0; font-size: .7rem !important; }
+.sm-archived { opacity: .65; }
+.sm-md { overflow-wrap: anywhere; }
+.sm-md pre { white-space: pre-wrap; }
+@media (max-width: 50rem) {
+  .sm-card { padding: .75rem .8rem; }
+  .sm-toolbar { justify-content: flex-start; }
+}
