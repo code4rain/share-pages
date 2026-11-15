@@ -286,7 +286,10 @@
   }
   start().catch(function (e) {
     root.textContent = '';
-    root.appendChild(el('p', { cls: 'sm-error', text: '내용을 열지 못했습니다: ' + (e && e.message ? e.message : e) }));
+    var why = e && e.name === 'OperationError'
+      ? '이 내용은 현재 사이트 키로 열 수 없습니다. 키를 바꾼 직후라면 앱의 동기화와 사이트 반영(수 분)이 끝난 뒤 새로고침하세요.'
+      : '내용을 열지 못했습니다: ' + (e && e.message ? e.message : e);
+    root.appendChild(el('p', { cls: 'sm-error', text: why }));
     root.appendChild(toolbar());
   });
 })();
