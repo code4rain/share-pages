@@ -15,6 +15,18 @@ for (const c of fx.cases) {
   if (got !== c.expected) { console.error('mismatch for', c.context); failures++; }
   try { await SMCrypto.decrypt(key, c.envelope, c.context + 'x'); console.error('wrong context accepted'); failures++; } catch (e) {}
 }
+// Same key without its leading/trailing spaces must NOT open (no trimming on either side).
+if (fx.pass !== fx.pass.trim()) {
+  try {
+    const trimmed = await SMCrypto.importKey(await SMCrypto.deriveEncKey(fx.pass.trim(), fx.kdf));
+    await SMCrypto.decrypt(trimmed, fx.check, 'check'); console.error('trimmed key accepted'); failures++;
+  } catch (e) {}
+}
+// NFD spelling of the same key must open (NFC normalization on both sides).
+if (fx.passNfd) {
+  const nfd = await SMCrypto.importKey(await SMCrypto.deriveEncKey(fx.passNfd, fx.kdf));
+  if (await SMCrypto.decrypt(nfd, fx.check, 'check') !== 'sm-pages-check-v1') { console.error('NFD key rejected'); failures++; }
+}
 try {
   const wrong = await SMCrypto.importKey(await SMCrypto.deriveEncKey(fx.pass + '!', fx.kdf));
   await SMCrypto.decrypt(wrong, fx.check, 'check'); console.error('wrong key accepted'); failures++;

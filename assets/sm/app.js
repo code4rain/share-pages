@@ -26,6 +26,7 @@
     if (!kdf || kdf.name !== 'PBKDF2' || kdf.hash !== 'SHA-256') throw new Error('unsupported kdf');
     var iter = kdf.iterations | 0;
     if (iter < 100000 || iter > 10000000) throw new Error('bad iterations');
+    // Key normalization (same as PagesCrypto.normalizePassphrase): Unicode NFC only — no trim, no case folding.
     var pw = te.encode(String(passphrase).normalize('NFC'));
     var base = await subtle.importKey('raw', pw, 'PBKDF2', false, ['deriveBits']);
     var master = await subtle.deriveBits({ name: 'PBKDF2', hash: 'SHA-256', salt: unb64u(kdf.salt), iterations: iter }, base, 256);
@@ -165,7 +166,9 @@
 
   function showLockForm(site, errorMsg) {
     root.textContent = '';
-    var input = el('input', { type: 'password', id: 'sm-pass', autocomplete: 'current-password', spellcheck: 'false', autocapitalize: 'off', placeholder: '사이트 키' });
+    var input = el('input', { type: 'password', id: 'sm-pass', autocomplete: 'current-password', spellcheck: 'false', autocapitalize: 'off', autocorrect: 'off', placeholder: '사이트 키' });
+    var show = el('input', { type: 'checkbox', id: 'sm-show' });
+    show.addEventListener('change', function () { input.type = show.checked ? 'text' : 'password'; });
     var remember = el('input', { type: 'checkbox', id: 'sm-remember' });
     var btn = el('button', { type: 'submit', cls: 'btn btn-primary', text: '열기' });
     var form = el('form', { cls: 'sm-lockform', autocomplete: 'on' }, [
@@ -173,6 +176,7 @@
       el('p', { cls: 'sm-muted', text: '이 보관함의 내용은 암호화되어 있습니다. 공유관리 앱에서 정한 사이트 키를 입력하세요.' }),
       el('input', { type: 'text', name: 'username', autocomplete: 'username', value: 'share-manager', cls: 'sm-hidden', 'aria-hidden': 'true', tabindex: '-1' }),
       el('label', { for: 'sm-pass', cls: 'sm-label', text: '사이트 키' }), input,
+      el('label', { cls: 'sm-check' }, [show, ' 키 보기 (대소문자·공백까지 그대로 입력)']),
       el('label', { cls: 'sm-check' }, [remember, ' 이 기기에서 기억하기 (공용 기기에서는 끄세요)']),
       btn,
       el('p', { cls: 'sm-status', role: 'status', 'aria-live': 'polite' })
